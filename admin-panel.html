@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AniShop Admin — Add Products</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#000;color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
+
+nav{background:#0a0a0a;border-bottom:0.5px solid #222;padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:#1a6fff}
+.nav-sub{font-size:11px;color:#555;letter-spacing:2px;text-transform:uppercase}
+
+.layout{max-width:1100px;margin:0 auto;padding:2rem;display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start}
+@media(max-width:700px){.layout{grid-template-columns:1fr}}
+
+/* PANEL */
+.panel{background:#0a0a0a;border:0.5px solid #222;border-radius:16px;padding:1.75rem}
+.panel-title{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;margin-bottom:0.25rem}
+.panel-sub{font-size:12px;color:#555;letter-spacing:1px;text-transform:uppercase;margin-bottom:1.75rem;padding-bottom:1rem;border-bottom:0.5px solid #1a1a1a}
+
+/* FORM */
+.field{margin-bottom:1.1rem}
+label{display:block;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#666;margin-bottom:6px}
+input,select,textarea{width:100%;background:#111;border:0.5px solid #2a2a2a;border-radius:8px;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;padding:10px 14px;transition:border-color 0.2s;outline:none}
+input:focus,select:focus,textarea:focus{border-color:#1a6fff}
+select option{background:#111}
+textarea{resize:vertical;min-height:80px;line-height:1.6}
+input::placeholder,textarea::placeholder{color:#444}
+
+.emoji-row{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-top:6px}
+.emoji-btn{background:#111;border:0.5px solid #222;border-radius:6px;padding:7px;font-size:18px;cursor:pointer;transition:background 0.15s,border-color 0.15s;text-align:center}
+.emoji-btn:hover{background:#1a1a1a;border-color:#444}
+.emoji-btn.selected{border-color:#1a6fff;background:rgba(26,111,255,0.1)}
+
+.features-list{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.feature-row{display:flex;gap:8px;align-items:center}
+.feature-row input{flex:1}
+.remove-btn{background:#1a0000;border:0.5px solid #330000;color:#ff4444;width:32px;height:38px;border-radius:6px;cursor:pointer;font-size:16px;flex-shrink:0;transition:background 0.15s}
+.remove-btn:hover{background:#2a0000}
+.add-feature-btn{background:transparent;border:0.5px dashed #333;border-radius:6px;color:#555;padding:8px;font-size:12px;cursor:pointer;width:100%;transition:border-color 0.2s,color 0.2s}
+.add-feature-btn:hover{border-color:#1a6fff;color:#1a6fff}
+
+.niche-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.niche-btn{background:#111;border:0.5px solid #222;border-radius:8px;padding:10px;font-size:13px;cursor:pointer;text-align:center;transition:all 0.15s;color:#888}
+.niche-btn:hover{border-color:#444;color:#fff}
+.niche-btn.selected{border-color:#1a6fff;background:rgba(26,111,255,0.1);color:#1a6fff}
+
+.video-toggle{display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 14px;background:#111;border:0.5px solid #2a2a2a;border-radius:8px;transition:border-color 0.2s}
+.video-toggle:hover{border-color:#444}
+.toggle-track{width:36px;height:20px;background:#222;border-radius:10px;position:relative;transition:background 0.2s;flex-shrink:0}
+.toggle-track.on{background:#1a6fff}
+.toggle-thumb{width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;top:2px;left:2px;transition:left 0.2s}
+.toggle-track.on .toggle-thumb{left:18px}
+.toggle-label{font-size:13px;color:#888}
+
+.generate-btn{width:100%;padding:14px;background:#1a6fff;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;transition:background 0.2s,transform 0.15s;letter-spacing:0.5px;margin-top:0.5rem}
+.generate-btn:hover{background:#1458d6;transform:translateY(-1px)}
+.generate-btn:active{transform:scale(0.98)}
+
+/* OUTPUT */
+.output-panel{background:#0a0a0a;border:0.5px solid #222;border-radius:16px;padding:1.75rem;position:sticky;top:72px}
+.output-title{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;margin-bottom:0.25rem}
+.output-sub{font-size:12px;color:#555;letter-spacing:1px;text-transform:uppercase;margin-bottom:1.75rem;padding-bottom:1rem;border-bottom:0.5px solid #1a1a1a}
+
+.steps-visual{display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem}
+.step-item{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;background:#111;border-radius:8px;border:0.5px solid #1a1a1a}
+.step-num{background:#1a6fff;color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+.step-text{font-size:13px;color:#888;line-height:1.5}
+.step-text strong{color:#ccc}
+
+.preview-card{background:#111;border:0.5px solid #2a2a2a;border-radius:12px;overflow:hidden;margin-bottom:1.5rem;display:none}
+.preview-card.show{display:block}
+.preview-thumb{height:110px;display:flex;align-items:center;justify-content:center;font-size:48px;background:#1a1a1a}
+.preview-body{padding:12px}
+.preview-niche{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#1a6fff;margin-bottom:3px}
+.preview-title{font-size:14px;font-weight:600;color:#fff;margin-bottom:3px}
+.preview-commission{font-size:11px;color:#555;margin-bottom:10px}
+.preview-btns{display:flex;gap:6px}
+.preview-btn-info{flex:1;padding:7px;background:rgba(26,111,255,0.12);color:#1a6fff;border:1px solid rgba(26,111,255,0.3);border-radius:6px;font-size:11px;font-weight:600;text-align:center}
+.preview-btn-buy{flex:1;padding:7px;background:#00c853;color:#000;border:none;border-radius:6px;font-size:11px;font-weight:600;text-align:center}
+
+.code-out{background:#050505;border:0.5px solid #1a1a1a;border-radius:10px;padding:1rem;font-family:monospace;font-size:11px;line-height:1.8;color:#666;white-space:pre;overflow-x:auto;max-height:280px;overflow-y:auto;margin-bottom:1rem;display:none}
+.code-out.show{display:block}
+.code-out .ck{color:#1a6fff}
+.code-out .cv{color:#00c853}
+.code-out .cs{color:#f5c842}
+
+.copy-section{display:none;flex-direction:column;gap:8px}
+.copy-section.show{display:flex}
+.copy-btn{padding:11px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s;border:none;letter-spacing:0.3px}
+.copy-btn-js{background:rgba(26,111,255,0.12);color:#1a6fff;border:1px solid rgba(26,111,255,0.3)}
+.copy-btn-js:hover{background:rgba(26,111,255,0.2)}
+.copy-btn-html{background:rgba(0,200,83,0.1);color:#00c853;border:1px solid rgba(0,200,83,0.25)}
+.copy-btn-html:hover{background:rgba(0,200,83,0.15)}
+.copied{background:rgba(0,200,83,0.2)!important;color:#00c853!important;border-color:#00c853!important}
+
+.empty-state{text-align:center;padding:3rem 1rem;color:#333}
+.empty-icon{font-size:40px;margin-bottom:1rem;opacity:0.4}
+.empty-text{font-size:13px;line-height:1.7}
+
+/* PRODUCT LIST */
+.product-list{margin-top:2rem}
+.product-list-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;margin-bottom:1rem;color:#666}
+.product-list-item{background:#0d0d0d;border:0.5px solid #1a1a1a;border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:12px;margin-bottom:8px;transition:border-color 0.2s}
+.product-list-item:hover{border-color:#333}
+.pli-emoji{font-size:22px}
+.pli-info{flex:1}
+.pli-title{font-size:13px;font-weight:600;color:#ccc}
+.pli-niche{font-size:11px;color:#555;text-transform:uppercase;letter-spacing:1px}
+.pli-del{background:transparent;border:0.5px solid #1a1a1a;color:#444;width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:14px;transition:all 0.15s}
+.pli-del:hover{background:#1a0000;border-color:#330000;color:#ff4444}
+
+.toast{position:fixed;bottom:2rem;right:2rem;background:#00c853;color:#000;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:999}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">ANISHOP ADMIN</div>
+  <div class="nav-sub">Add Products — No Coding</div>
+</nav>
+
+<div class="layout">
+
+  <!-- LEFT: FORM -->
+  <div>
+    <div class="panel">
+      <div class="panel-title">ADD NEW PRODUCT</div>
+      <div class="panel-sub">Fill in the form · Click Generate · Copy the code</div>
+
+      <div class="field">
+        <label>Choose Emoji / Icon</label>
+        <input type="text" id="emoji-input" placeholder="Or type your own emoji" maxlength="4" value="🎨" oninput="updatePreview()"/>
+        <div class="emoji-row" id="emoji-row"></div>
+      </div>
+
+      <div class="field">
+        <label>Niche</label>
+        <div class="niche-row">
+          <div class="niche-btn selected" onclick="selectNiche('Anime',this)">🎌 Anime</div>
+          <div class="niche-btn" onclick="selectNiche('Gaming',this)">🎮 Gaming</div>
+          <div class="niche-btn" onclick="selectNiche('Fitness',this)">💪 Fitness</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Product Title</label>
+        <input type="text" id="prod-title" placeholder="e.g. Anime Drawing Mastery" oninput="updatePreview()"/>
+      </div>
+
+      <div class="field">
+        <label>Price & Commission (shown on card)</label>
+        <input type="text" id="prod-commission" placeholder="e.g. $97 · 75% commission" oninput="updatePreview()"/>
+      </div>
+
+      <div class="field">
+        <label>Product Description</label>
+        <textarea id="prod-desc" placeholder="Short description of what this product teaches or does..."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Benefits / Features (shown in Info popup)</label>
+        <div class="features-list" id="features-list">
+          <div class="feature-row">
+            <input type="text" placeholder="e.g. 50+ video lessons"/>
+            <button class="remove-btn" onclick="removeFeature(this)">×</button>
+          </div>
+          <div class="feature-row">
+            <input type="text" placeholder="e.g. Works for complete beginners"/>
+            <button class="remove-btn" onclick="removeFeature(this)">×</button>
+          </div>
+          <div class="feature-row">
+            <input type="text" placeholder="e.g. 60-day money-back guarantee"/>
+            <button class="remove-btn" onclick="removeFeature(this)">×</button>
+          </div>
+        </div>
+        <button class="add-feature-btn" onclick="addFeature()">+ Add another benefit</button>
+      </div>
+
+      <div class="field">
+        <label>Your ClickBank HopLink</label>
+        <input type="text" id="prod-hoplink" placeholder="e.g. nick.animedrawing.hop.clickbank.net"/>
+      </div>
+
+      <div class="field">
+        <label>Has a product video?</label>
+        <div class="video-toggle" onclick="toggleVideo()" id="video-toggle">
+          <div class="toggle-track" id="toggle-track"><div class="toggle-thumb"></div></div>
+          <div class="toggle-label" id="toggle-label">No video</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Product ID (no spaces, no special characters)</label>
+        <input type="text" id="prod-id" placeholder="e.g. anime4 or gaming3" oninput="sanitizeId(this)"/>
+      </div>
+
+      <button class="generate-btn" onclick="generateCode()">Generate Code →</button>
+    </div>
+
+    <!-- SAVED PRODUCTS LIST -->
+    <div class="product-list" id="product-list" style="display:none">
+      <div class="product-list-title">SAVED PRODUCTS</div>
+      <div id="product-list-items"></div>
+    </div>
+  </div>
+
+  <!-- RIGHT: OUTPUT -->
+  <div class="output-panel">
+    <div class="output-title">YOUR CODE</div>
+    <div class="output-sub">Preview + ready to paste code</div>
+
+    <div class="preview-card" id="preview-card">
+      <div class="preview-thumb" id="preview-thumb">🎨</div>
+      <div class="preview-body">
+        <div class="preview-niche" id="preview-niche">Anime</div>
+        <div class="preview-title" id="preview-title">Product name will appear here</div>
+        <div class="preview-commission" id="preview-commission">Price · Commission</div>
+        <div class="preview-btns">
+          <div class="preview-btn-info">ℹ Info</div>
+          <div class="preview-btn-buy">Buy Now</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="empty-state" class="empty-state">
+      <div class="empty-icon">📦</div>
+      <div class="empty-text">Fill in the form on the left<br/>and click <strong style="color:#ccc">Generate Code</strong><br/>to see your product code here</div>
+    </div>
+
+    <div class="steps-visual" id="steps-visual" style="display:none">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-text">Copy the <strong>JS block</strong> → paste it inside <strong>const PRODUCTS = {</strong> in index.html</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-text">Copy the <strong>HTML block</strong> → paste it inside the correct niche section in index.html</div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-text">Save the file and upload to GitHub. Done! ✅</div>
+      </div>
+    </div>
+
+    <div class="code-out" id="code-js"></div>
+    <div class="code-out" id="code-html"></div>
+
+    <div class="copy-section" id="copy-section">
+      <button class="copy-btn copy-btn-js" onclick="copyCode('js')">📋 Copy JS Block (Step 1)</button>
+      <button class="copy-btn copy-btn-html" onclick="copyCode('html')">📋 Copy HTML Block (Step 2)</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast">Copied!</div>
+
+<script>
+// EMOJIS
+const emojis = ['🎨','🇯🇵','📖','🎮','🏆','🎯','🔥','💊','💪','🥊','🎌','🖌️','✏️','📚','🎵','🎸','📷','🏋️','🧘','⚔️','🌟','💡','🚀','🎭'];
+const emojiRow = document.getElementById('emoji-row');
+emojis.forEach(e => {
+  const btn = document.createElement('button');
+  btn.className = 'emoji-btn';
+  btn.textContent = e;
+  btn.onclick = () => {
+    document.getElementById('emoji-input').value = e;
+    document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    updatePreview();
+  };
+  emojiRow.appendChild(btn);
+});
+
+// STATE
+let selectedNiche = 'Anime';
+let hasVideo = false;
+let savedProducts = JSON.parse(localStorage.getItem('anishop_products') || '[]');
+
+function selectNiche(n, el){
+  selectedNiche = n;
+  document.querySelectorAll('.niche-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  updatePreview();
+}
+
+function toggleVideo(){
+  hasVideo = !hasVideo;
+  const track = document.getElementById('toggle-track');
+  const label = document.getElementById('toggle-label');
+  track.className = 'toggle-track' + (hasVideo ? ' on' : '');
+  label.textContent = hasVideo ? 'Has a video' : 'No video';
+}
+
+function addFeature(){
+  const list = document.getElementById('features-list');
+  const row = document.createElement('div');
+  row.className = 'feature-row';
+  row.innerHTML = '<input type="text" placeholder="Add a benefit..."/><button class="remove-btn" onclick="removeFeature(this)">×</button>';
+  list.appendChild(row);
+}
+
+function removeFeature(btn){
+  const rows = document.querySelectorAll('.feature-row');
+  if(rows.length > 1) btn.parentElement.remove();
+}
+
+function sanitizeId(input){
+  input.value = input.value.replace(/[^a-zA-Z0-9_]/g,'').toLowerCase();
+}
+
+function updatePreview(){
+  const emoji = document.getElementById('emoji-input').value || '🎨';
+  const title = document.getElementById('prod-title').value || 'Product name will appear here';
+  const commission = document.getElementById('prod-commission').value || 'Price · Commission';
+  document.getElementById('preview-thumb').textContent = emoji;
+  document.getElementById('preview-title').textContent = title;
+  document.getElementById('preview-niche').textContent = selectedNiche;
+  document.getElementById('preview-commission').textContent = commission;
+  document.getElementById('preview-card').classList.add('show');
+  document.getElementById('empty-state').style.display = 'none';
+}
+
+function getFeatures(){
+  return Array.from(document.querySelectorAll('.feature-row input'))
+    .map(i => i.value.trim()).filter(Boolean);
+}
+
+function generateCode(){
+  const emoji = document.getElementById('emoji-input').value.trim();
+  const title = document.getElementById('prod-title').value.trim();
+  const commission = document.getElementById('prod-commission').value.trim();
+  const desc = document.getElementById('prod-desc').value.trim();
+  const hoplink = document.getElementById('prod-hoplink').value.trim();
+  const pid = document.getElementById('prod-id').value.trim();
+  const features = getFeatures();
+
+  if(!title){alert('Please enter a product title');return}
+  if(!pid){alert('Please enter a product ID (e.g. anime4)');return}
+  if(!hoplink){alert('Please enter your ClickBank hoplink');return}
+
+  // JS BLOCK
+  const featuresStr = features.map(f => `    '${f}'`).join(',\n');
+  const jsCode =
+`  ${pid}: {
+    emoji: '${emoji}',
+    niche: '${selectedNiche}',
+    title: '${title}',
+    desc: '${desc}',
+    features: [
+${featuresStr}
+    ],
+    hasVideo: ${hasVideo},
+    cbPath: '${hoplink.replace(/^https?:\/\//,'')}'
+  },`;
+
+  // HTML BLOCK
+  const htmlCode =
+`<div class="product-card">
+  <div class="product-thumb">${emoji}</div>
+  <div class="product-body">
+    <div class="product-niche">${selectedNiche}</div>
+    <div class="product-title">${title}</div>
+    <div class="product-commission">${commission}</div>
+    <div class="product-btns">
+      <button class="card-btn card-btn-info" onclick="openModal('${pid}')">ℹ Info</button>
+      <button class="card-btn card-btn-buy buy-btn" data-product="${pid}">Buy Now</button>
+    </div>
+  </div>
+</div>`;
+
+  // Display
+  const jsEl = document.getElementById('code-js');
+  const htmlEl = document.getElementById('code-html');
+  jsEl.textContent = '// STEP 1 — Paste inside const PRODUCTS = { ... }\n\n' + jsCode;
+  htmlEl.textContent = '<!-- STEP 2 — Paste inside the ' + selectedNiche + ' section -->\n\n' + htmlCode;
+  jsEl.classList.add('show');
+  htmlEl.classList.add('show');
+  document.getElementById('copy-section').classList.add('show');
+  document.getElementById('steps-visual').style.display = 'flex';
+  document.getElementById('empty-state').style.display = 'none';
+
+  // Save to list
+  savedProducts.push({pid, emoji, title, niche: selectedNiche, jsCode, htmlCode});
+  localStorage.setItem('anishop_products', JSON.stringify(savedProducts));
+  renderProductList();
+
+  window.lastJsCode = jsCode;
+  window.lastHtmlCode = htmlCode;
+}
+
+function copyCode(type){
+  const text = type === 'js' ? window.lastJsCode : window.lastHtmlCode;
+  if(!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.copy-btn-' + type);
+    btn.classList.add('copied');
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.textContent = type === 'js' ? '📋 Copy JS Block (Step 1)' : '📋 Copy HTML Block (Step 2)';
+    }, 2000);
+    showToast('Copied to clipboard!');
+  });
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function renderProductList(){
+  if(savedProducts.length === 0){
+    document.getElementById('product-list').style.display = 'none';
+    return;
+  }
+  document.getElementById('product-list').style.display = 'block';
+  const container = document.getElementById('product-list-items');
+  container.innerHTML = savedProducts.map((p,i) => `
+    <div class="product-list-item">
+      <div class="pli-emoji">${p.emoji}</div>
+      <div class="pli-info">
+        <div class="pli-title">${p.title}</div>
+        <div class="pli-niche">${p.niche} · ID: ${p.pid}</div>
+      </div>
+      <button class="pli-del" onclick="deleteProduct(${i})">×</button>
+    </div>
+  `).join('');
+}
+
+function deleteProduct(i){
+  savedProducts.splice(i,1);
+  localStorage.setItem('anishop_products', JSON.stringify(savedProducts));
+  renderProductList();
+  showToast('Product removed');
+}
+
+// INIT
+renderProductList();
+updatePreview();
+</script>
+</body>
+</html>

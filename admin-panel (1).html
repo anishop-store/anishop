@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AniShop Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#000;color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
+
+/* NAV */
+nav{background:#0a0a0a;border-bottom:0.5px solid #222;padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:99}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:#1a6fff}
+.nav-tabs{display:flex;gap:4px}
+.nav-tab{padding:6px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;letter-spacing:0.5px;transition:all 0.15s;border:none;background:transparent;color:#555}
+.nav-tab:hover{color:#ccc}
+.nav-tab.active{background:rgba(26,111,255,0.15);color:#1a6fff}
+
+/* PAGES */
+.page{display:none;max-width:1100px;margin:0 auto;padding:2rem}
+.page.active{display:block}
+
+/* COMMON */
+.panel{background:#0a0a0a;border:0.5px solid #222;border-radius:16px;padding:1.75rem;margin-bottom:1.5rem}
+.panel-title{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1px;margin-bottom:0.25rem}
+.panel-sub{font-size:12px;color:#555;letter-spacing:1px;text-transform:uppercase;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:0.5px solid #1a1a1a}
+.field{margin-bottom:1.1rem}
+label{display:block;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#666;margin-bottom:6px}
+input,textarea,select{width:100%;background:#111;border:0.5px solid #2a2a2a;border-radius:8px;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;padding:10px 14px;transition:border-color 0.2s;outline:none}
+input:focus,textarea:focus,select:focus{border-color:#1a6fff}
+textarea{resize:vertical;min-height:70px;line-height:1.6}
+input::placeholder,textarea::placeholder{color:#444}
+
+/* GRID */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start}
+@media(max-width:700px){.two-col{grid-template-columns:1fr}}
+
+/* BUTTONS */
+.btn{padding:11px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s;border:none;letter-spacing:0.3px}
+.btn-blue{background:#1a6fff;color:#fff}
+.btn-blue:hover{background:#1458d6;transform:translateY(-1px)}
+.btn-full{width:100%;padding:13px;font-size:14px}
+.btn-green{background:#00c853;color:#000}
+.btn-green:hover{background:#009624}
+.btn-ghost{background:transparent;border:0.5px solid #333;color:#888}
+.btn-ghost:hover{border-color:#555;color:#ccc}
+.btn-red{background:transparent;border:0.5px solid #330000;color:#ff4444}
+.btn-red:hover{background:#1a0000}
+
+/* IMAGE TABS */
+.img-tabs{display:flex;gap:8px;margin-bottom:10px}
+.img-tab{flex:1;padding:8px;background:#111;border:0.5px solid #222;border-radius:8px;font-size:12px;color:#666;cursor:pointer;text-align:center;transition:all 0.15s;font-weight:500}
+.img-tab:hover{border-color:#444;color:#ccc}
+.img-tab.active{border-color:#1a6fff;background:rgba(26,111,255,0.1);color:#1a6fff}
+.img-src{display:none}
+.img-src.active{display:block}
+.upload-zone{border:1.5px dashed #2a2a2a;border-radius:10px;padding:2rem 1rem;text-align:center;cursor:pointer;background:#0d0d0d;position:relative;overflow:hidden;transition:all 0.2s}
+.upload-zone:hover{border-color:#1a6fff;background:#0a0f1a}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-ico{font-size:30px;opacity:0.3;margin-bottom:8px}
+.upload-lbl{font-size:13px;color:#666}
+.img-prev{display:none;position:relative;border-radius:8px;overflow:hidden;border:0.5px solid #1a6fff;margin-top:8px}
+.img-prev img{width:100%;height:160px;object-fit:cover;display:block}
+.img-prev-x{position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.85);color:#fff;border:0.5px solid #555;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center}
+.img-prev-x:hover{background:#e53935;border-color:#e53935}
+.url-row{display:flex;gap:8px}
+.url-row input{flex:1}
+.emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;margin-top:8px}
+.emo-btn{background:#111;border:0.5px solid #222;border-radius:5px;padding:6px;font-size:17px;cursor:pointer;text-align:center;transition:all 0.12s}
+.emo-btn:hover,.emo-btn.sel{border-color:#1a6fff;background:rgba(26,111,255,0.1)}
+
+/* NICHE */
+.niche-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.niche-btn{background:#111;border:0.5px solid #222;border-radius:8px;padding:9px;font-size:13px;cursor:pointer;text-align:center;transition:all 0.15s;color:#888;font-weight:500}
+.niche-btn:hover{border-color:#444;color:#fff}
+.niche-btn.sel{border-color:#1a6fff;background:rgba(26,111,255,0.1);color:#1a6fff}
+
+/* FEATURES */
+.feat-list{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.feat-row{display:flex;gap:8px;align-items:center}
+.feat-row input{flex:1}
+.feat-del{background:#1a0000;border:0.5px solid #330000;color:#ff4444;width:32px;height:36px;border-radius:6px;cursor:pointer;font-size:17px;flex-shrink:0}
+.feat-add{background:transparent;border:0.5px dashed #2a2a2a;border-radius:6px;color:#555;padding:8px;font-size:12px;cursor:pointer;width:100%;transition:all 0.2s}
+.feat-add:hover{border-color:#1a6fff;color:#1a6fff}
+
+/* TOGGLE */
+.tog{display:flex;align-items:center;gap:10px;cursor:pointer;padding:9px 14px;background:#111;border:0.5px solid #2a2a2a;border-radius:8px;user-select:none}
+.tog-track{width:34px;height:18px;background:#222;border-radius:9px;position:relative;transition:background 0.2s;flex-shrink:0}
+.tog-track.on{background:#1a6fff}
+.tog-thumb{width:14px;height:14px;background:#fff;border-radius:50%;position:absolute;top:2px;left:2px;transition:left 0.2s}
+.tog-track.on .tog-thumb{left:18px}
+.tog-lbl{font-size:13px;color:#888}
+
+/* PRODUCT PREVIEW CARD */
+.prev-card{background:#111;border:0.5px solid #2a2a2a;border-radius:12px;overflow:hidden}
+.prev-thumb{height:120px;display:flex;align-items:center;justify-content:center;font-size:48px;background:#1a1a1a;position:relative;overflow:hidden}
+.prev-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.prev-emoji{position:relative;z-index:1}
+.prev-body{padding:12px}
+.prev-niche{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#1a6fff;margin-bottom:3px}
+.prev-name{font-size:14px;font-weight:600;color:#fff;margin-bottom:3px}
+.prev-price{font-size:11px;color:#555;margin-bottom:10px}
+.prev-btns{display:flex;gap:6px}
+.pbi{flex:1;padding:7px;background:rgba(26,111,255,0.12);color:#1a6fff;border:1px solid rgba(26,111,255,0.3);border-radius:6px;font-size:11px;font-weight:600;text-align:center}
+.pbb{flex:1;padding:7px;background:#00c853;color:#000;border-radius:6px;font-size:11px;font-weight:700;text-align:center}
+
+/* CODE BOXES */
+.code-box{background:#050505;border:0.5px solid #1a1a1a;border-radius:10px;padding:1rem;font-family:monospace;font-size:11px;line-height:1.8;color:#666;white-space:pre-wrap;word-break:break-all;max-height:200px;overflow-y:auto;margin-bottom:8px;display:none}
+.code-box.on{display:block}
+.copy-btns{display:none;flex-direction:column;gap:8px}
+.copy-btns.on{display:flex}
+.cp-btn{padding:10px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.15s;border:none;text-align:center}
+.cp-js{background:rgba(26,111,255,0.12);color:#1a6fff;border:1px solid rgba(26,111,255,0.3)}
+.cp-html{background:rgba(0,200,83,0.1);color:#00c853;border:1px solid rgba(0,200,83,0.25)}
+
+/* ── CREATOR PAGE ── */
+.site-url-box{background:#111;border:0.5px solid #2a2a2a;border-radius:8px;padding:10px 14px;font-size:13px;color:#888;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+.site-url-box span{color:#1a6fff;font-weight:600}
+
+.creator-form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.creator-form{grid-template-columns:1fr}}
+.creator-form .full{grid-column:1/-1}
+
+.gen-link-btn{width:100%;padding:12px;background:#1a6fff;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;margin-top:4px}
+.gen-link-btn:hover{background:#1458d6;transform:translateY(-1px)}
+
+/* CREATOR LIST */
+.creator-list{display:flex;flex-direction:column;gap:10px}
+.creator-card{background:#0d0d0d;border:0.5px solid #1a1a1a;border-radius:12px;padding:1rem 1.25rem;transition:border-color 0.2s}
+.creator-card:hover{border-color:#2a2a2a}
+.creator-top{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.creator-avatar{width:40px;height:40px;border-radius:50%;background:rgba(26,111,255,0.1);border:0.5px solid rgba(26,111,255,0.2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.creator-info{flex:1;min-width:0}
+.creator-name{font-size:14px;font-weight:700;color:#fff}
+.creator-meta{font-size:12px;color:#555}
+.creator-niche-tag{display:inline-block;background:rgba(26,111,255,0.08);color:#1a6fff;border:0.5px solid rgba(26,111,255,0.2);border-radius:4px;padding:1px 7px;font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-left:6px}
+.creator-link-box{background:#050505;border:0.5px solid #1a6fff;border-radius:8px;padding:8px 12px;font-family:monospace;font-size:12px;color:#1a6fff;word-break:break-all;margin-bottom:8px;cursor:pointer;transition:background 0.15s}
+.creator-link-box:hover{background:#0a0f1a}
+.creator-tid{background:#050505;border:0.5px solid #00c853;border-radius:6px;padding:5px 10px;font-family:monospace;font-size:11px;color:#00c853;display:inline-block;margin-bottom:8px}
+.creator-note{font-size:12px;color:#555;margin-bottom:10px;font-style:italic}
+.creator-actions{display:flex;gap:8px}
+.ca-btn{flex:1;padding:7px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all 0.15s;text-align:center}
+.ca-copy{background:rgba(26,111,255,0.1);color:#1a6fff;border:0.5px solid rgba(26,111,255,0.25)}
+.ca-copy:hover{background:rgba(26,111,255,0.2)}
+.ca-del{background:rgba(255,68,68,0.08);color:#ff4444;border:0.5px solid rgba(255,68,68,0.2)}
+.ca-del:hover{background:rgba(255,68,68,0.15)}
+
+.empty-creators{text-align:center;padding:3rem 1rem;color:#333}
+.empty-ico{font-size:36px;margin-bottom:1rem;opacity:0.3}
+.empty-txt{font-size:13px;color:#444;line-height:1.8}
+
+/* ── TID TESTER PAGE ── */
+.tid-demo{background:#0a0a0a;border:0.5px solid #222;border-radius:16px;padding:1.75rem;margin-bottom:1.5rem}
+.tid-input-row{display:flex;gap:12px;align-items:flex-end;margin-bottom:1.5rem}
+.tid-input-row .field{flex:1;margin:0}
+.tid-test-btn{padding:10px 20px;background:#1a6fff;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all 0.15s;flex-shrink:0}
+.tid-test-btn:hover{background:#1458d6}
+
+.tid-result{background:#050505;border:0.5px solid #1a1a1a;border-radius:10px;padding:1.25rem;margin-bottom:1rem}
+.tid-result-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#555;margin-bottom:6px}
+.tid-result-value{font-family:monospace;font-size:13px;color:#1a6fff;word-break:break-all;line-height:1.6}
+
+.mock-btn-wrap{text-align:center;padding:2rem;background:#050505;border:0.5px solid #1a1a1a;border-radius:12px;margin-bottom:1rem}
+.mock-btn-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#444;margin-bottom:1rem}
+.mock-buy-btn{display:inline-block;padding:14px 40px;background:#00c853;color:#000;border-radius:8px;font-size:15px;font-weight:700;letter-spacing:0.5px;cursor:pointer;transition:all 0.2s;text-decoration:none;border:none}
+.mock-buy-btn:hover{background:#009624;transform:translateY(-1px)}
+.mock-buy-btn .dot{display:inline-block;width:8px;height:8px;background:#000;border-radius:50%;margin-right:8px;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.4)}}
+
+.flow-box{display:flex;flex-direction:column;gap:8px}
+.flow-step{display:flex;align-items:center;gap:12px;padding:10px 14px;background:#0d0d0d;border-radius:8px;border:0.5px solid #1a1a1a}
+.flow-ico{font-size:18px;flex-shrink:0}
+.flow-txt{font-size:13px;color:#777;line-height:1.5}
+.flow-txt strong{color:#ccc}
+.flow-txt .highlight{color:#1a6fff;font-family:monospace}
+.flow-arrow{text-align:center;color:#333;font-size:18px;margin:-2px 0}
+
+/* HINT */
+.hint-box{background:#0a0f1a;border-left:3px solid #1a6fff;border-radius:0 8px 8px 0;padding:8px 12px;font-size:12px;color:#555;line-height:1.6;margin-top:8px}
+.warn-box{background:#0f0a00;border-left:3px solid #f5c842;border-radius:0 8px 8px 0;padding:8px 12px;font-size:12px;color:#888;line-height:1.6;margin-top:8px}
+
+/* STEPS */
+.steps-box{display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem}
+.step-row{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;background:#111;border-radius:8px;border:0.5px solid #1a1a1a}
+.step-n{background:#1a6fff;color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+.step-t{font-size:13px;color:#777;line-height:1.5}
+.step-t strong{color:#ccc}
+
+/* SAVED PRODUCTS */
+.sli{background:#0d0d0d;border:0.5px solid #1a1a1a;border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.sli-thumb{width:38px;height:38px;border-radius:6px;background:#1a1a1a;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;overflow:hidden}
+.sli-thumb img{width:100%;height:100%;object-fit:cover}
+.sli-info{flex:1;min-width:0}
+.sli-name{font-size:13px;font-weight:600;color:#ccc;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sli-meta{font-size:11px;color:#444;text-transform:uppercase;letter-spacing:1px}
+.sli-del{background:transparent;border:0.5px solid #1a1a1a;color:#444;width:26px;height:26px;border-radius:6px;cursor:pointer;font-size:14px;flex-shrink:0}
+.sli-del:hover{background:#1a0000;border-color:#330000;color:#ff4444}
+
+/* TOAST */
+.toast{position:fixed;bottom:2rem;right:2rem;background:#00c853;color:#000;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:700;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:999}
+.toast.on{opacity:1}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">ANISHOP ADMIN</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('products',this)">📦 Products</button>
+    <button class="nav-tab" onclick="showPage('creators',this)">👥 Creators</button>
+    <button class="nav-tab" onclick="showPage('tid',this)">🔗 TID Tester</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 1 — PRODUCTS
+═══════════════════════════════════════════════════════════ -->
+<div class="page active" id="page-products">
+<div class="two-col">
+
+<!-- LEFT: FORM -->
+<div>
+<div class="panel">
+  <div class="panel-title">ADD NEW PRODUCT</div>
+  <div class="panel-sub">Fill in · Generate · Copy · Paste into index.html</div>
+
+  <!-- IMAGE -->
+  <div class="field">
+    <label>Product Image</label>
+    <div class="img-tabs">
+      <div class="img-tab active" onclick="switchImgTab('upload',this)">📁 Upload</div>
+      <div class="img-tab" onclick="switchImgTab('url',this)">🔗 URL</div>
+      <div class="img-tab" onclick="switchImgTab('emoji',this)">😀 Emoji</div>
+    </div>
+    <div class="img-src active" id="tab-upload">
+      <div class="upload-zone">
+        <input type="file" accept="image/*" id="file-in" onchange="onFile(this)"/>
+        <div id="up-ph"><div class="upload-ico">🖼️</div><div class="upload-lbl">Click or drag & drop image</div><div style="font-size:11px;color:#444;margin-top:4px">JPG · PNG · WEBP</div></div>
+      </div>
+      <div class="img-prev" id="up-prev"><img id="up-prev-img" src="" alt=""/><button class="img-prev-x" onclick="clearUpload(event)">×</button></div>
+      <div class="hint-box">Image embeds directly into your site — no hosting needed</div>
+    </div>
+    <div class="img-src" id="tab-url">
+      <div class="url-row"><input type="text" id="url-in" placeholder="Paste image URL..."/><button class="btn btn-blue" style="padding:10px 14px;white-space:nowrap" onclick="loadUrl()">Load</button></div>
+      <div class="img-prev" id="url-prev" style="margin-top:8px"><img id="url-prev-img" src="" alt=""/><button class="img-prev-x" onclick="clearUrl(event)">×</button></div>
+    </div>
+    <div class="img-src" id="tab-emoji">
+      <input type="text" id="emoji-in" value="🎨" maxlength="4" oninput="updatePrev()"/>
+      <div class="emoji-grid" id="emoji-grid"></div>
+    </div>
+  </div>
+
+  <!-- NICHE -->
+  <div class="field">
+    <label>Niche</label>
+    <div class="niche-row">
+      <div class="niche-btn sel" onclick="pickNiche('Anime',this)">🎌 Anime</div>
+      <div class="niche-btn" onclick="pickNiche('Gaming',this)">🎮 Gaming</div>
+      <div class="niche-btn" onclick="pickNiche('Fitness',this)">💪 Fitness</div>
+    </div>
+  </div>
+
+  <div class="field"><label>Product Title</label><input type="text" id="f-title" placeholder="e.g. Anime Drawing Mastery" oninput="updatePrev()"/></div>
+  <div class="field"><label>Price & Commission</label><input type="text" id="f-price" placeholder="e.g. $97 · 75% commission" oninput="updatePrev()"/></div>
+  <div class="field"><label>Description</label><textarea id="f-desc" placeholder="Short product description..."></textarea></div>
+
+  <div class="field">
+    <label>Benefits / Features</label>
+    <div class="feat-list" id="feat-list">
+      <div class="feat-row"><input type="text" placeholder="e.g. 50+ video lessons"/><button class="feat-del" onclick="delFeat(this)">×</button></div>
+      <div class="feat-row"><input type="text" placeholder="e.g. Works for beginners"/><button class="feat-del" onclick="delFeat(this)">×</button></div>
+      <div class="feat-row"><input type="text" placeholder="e.g. 60-day money-back guarantee"/><button class="feat-del" onclick="delFeat(this)">×</button></div>
+    </div>
+    <button class="feat-add" onclick="addFeat()">+ Add benefit</button>
+  </div>
+
+  <div class="field"><label>ClickBank HopLink</label><input type="text" id="f-hop" placeholder="e.g. nick.product.hop.clickbank.net"/></div>
+
+  <div class="field">
+    <label>Has a product video?</label>
+    <div class="tog" onclick="togVid()"><div class="tog-track" id="tog-track"><div class="tog-thumb"></div></div><div class="tog-lbl" id="tog-lbl">No video</div></div>
+  </div>
+
+  <div class="field"><label>Product ID (letters & numbers only)</label><input type="text" id="f-id" placeholder="e.g. anime4" oninput="cleanId(this)"/></div>
+  <button class="btn btn-blue btn-full" onclick="generateProduct()">⚡ Generate Code</button>
+</div>
+
+<!-- SAVED PRODUCTS -->
+<div class="panel" id="saved-prod-panel" style="display:none">
+  <div class="panel-title">SAVED PRODUCTS</div>
+  <div class="panel-sub">Your product list</div>
+  <div id="saved-prod-items"></div>
+</div>
+</div>
+
+<!-- RIGHT: OUTPUT -->
+<div>
+<div class="panel">
+  <div class="panel-title">PREVIEW & CODE</div>
+  <div class="panel-sub">Live preview · Copy to paste into index.html</div>
+
+  <div class="prev-card" style="margin-bottom:1.5rem">
+    <div class="prev-thumb" id="prev-thumb"><img id="prev-img" src="" alt="" style="display:none"/><span class="prev-emoji" id="prev-emoji">🎨</span></div>
+    <div class="prev-body">
+      <div class="prev-niche" id="prev-niche">Anime</div>
+      <div class="prev-name" id="prev-name">Product name here</div>
+      <div class="prev-price" id="prev-price">Price · Commission</div>
+      <div class="prev-btns"><div class="pbi">ℹ Info</div><div class="pbb">Buy Now</div></div>
+    </div>
+  </div>
+
+  <div class="steps-box">
+    <div class="step-row"><div class="step-n">1</div><div class="step-t">Copy <strong>JS Block</strong> → paste inside <strong>const PRODUCTS = {</strong></div></div>
+    <div class="step-row"><div class="step-n">2</div><div class="step-t">Copy <strong>HTML Block</strong> → paste inside your niche section</div></div>
+    <div class="step-row"><div class="step-n">3</div><div class="step-t">Save → upload to GitHub → done ✅</div></div>
+  </div>
+
+  <div class="code-box" id="code-js"></div>
+  <div class="code-box" id="code-html"></div>
+  <div class="copy-btns" id="copy-btns">
+    <button class="cp-btn cp-js" onclick="doCopy('js')">📋 Copy JS Block — Step 1</button>
+    <button class="cp-btn cp-html" onclick="doCopy('html')">📋 Copy HTML Block — Step 2</button>
+  </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 2 — CREATORS
+═══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-creators">
+<div class="two-col">
+
+<!-- LEFT: FORM -->
+<div>
+<div class="panel">
+  <div class="panel-title">ADD NEW CREATOR</div>
+  <div class="panel-sub">Fill in · Generate their unique link</div>
+
+  <div class="field">
+    <label>Your GitHub Site URL</label>
+    <input type="text" id="site-url" placeholder="e.g. yourusername.github.io" oninput="updateCreatorPreview()"/>
+    <div class="hint-box">This is your website address — all creator links are based on this</div>
+  </div>
+
+  <div class="creator-form">
+    <div class="field">
+      <label>Creator Name</label>
+      <input type="text" id="c-name" placeholder="e.g. John" oninput="sanitizeCreator(this);updateCreatorPreview()"/>
+    </div>
+    <div class="field">
+      <label>TikTok / Instagram</label>
+      <input type="text" id="c-tiktok" placeholder="e.g. @johntiktok"/>
+    </div>
+    <div class="field">
+      <label>Niche</label>
+      <select id="c-niche">
+        <option value="Anime">🎌 Anime</option>
+        <option value="Gaming">🎮 Gaming</option>
+        <option value="Fitness">💪 Fitness</option>
+        <option value="Mixed">🌟 Mixed</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Followers (approx)</label>
+      <input type="text" id="c-followers" placeholder="e.g. 15k"/>
+    </div>
+    <div class="field full">
+      <label>Notes</label>
+      <textarea id="c-notes" placeholder="e.g. Posts daily, very engaged audience, pays via PayPal..." style="min-height:60px"></textarea>
+    </div>
+  </div>
+
+  <!-- PREVIEW LINK -->
+  <div style="background:#050505;border:0.5px solid #1a6fff;border-radius:10px;padding:1rem;margin-bottom:1rem">
+    <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#555;margin-bottom:6px">Their unique link will be:</div>
+    <div id="c-link-preview" style="font-family:monospace;font-size:13px;color:#1a6fff;word-break:break-all">yoursite.github.io?creator=name</div>
+    <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#555;margin-top:8px;margin-bottom:4px">ClickBank tracking ID:</div>
+    <div id="c-tid-preview" style="font-family:monospace;font-size:12px;color:#00c853">tid=name</div>
+  </div>
+
+  <button class="gen-link-btn" onclick="addCreator()">🔗 Generate & Save Creator Link</button>
+</div>
+</div>
+
+<!-- RIGHT: CREATOR LIST -->
+<div>
+<div class="panel">
+  <div class="panel-title">YOUR CREATORS</div>
+  <div class="panel-sub" id="creator-count-label">No creators yet</div>
+  <div id="creator-list">
+    <div class="empty-creators">
+      <div class="empty-ico">👥</div>
+      <div class="empty-txt">No creators yet<br/>Add your first creator on the left<br/>Each gets a unique tracking link</div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PAGE 3 — TID TESTER
+═══════════════════════════════════════════════════════════ -->
+<div class="page" id="page-tid">
+<div class="two-col">
+
+<!-- LEFT -->
+<div>
+<div class="panel">
+  <div class="panel-title">TID LINK TESTER</div>
+  <div class="panel-sub">See exactly how your buy button changes per creator</div>
+
+  <div class="field">
+    <label>Your ClickBank HopLink Base</label>
+    <input type="text" id="tid-hop" placeholder="e.g. nick.product.hop.clickbank.net" oninput="updateTid()"/>
+  </div>
+
+  <div class="tid-input-row">
+    <div class="field" style="flex:1;margin:0">
+      <label>Creator Name to Test</label>
+      <input type="text" id="tid-creator" placeholder="e.g. john" oninput="updateTid()"/>
+    </div>
+  </div>
+
+  <div style="margin-top:1.5rem">
+    <div class="tid-result">
+      <div class="tid-result-label">Full Buy Button Link</div>
+      <div class="tid-result-value" id="tid-full-link">https://nick.product.hop.clickbank.net/?tid=john</div>
+    </div>
+    <div class="tid-result">
+      <div class="tid-result-label">Tracking ID being passed to ClickBank</div>
+      <div class="tid-result-value" id="tid-value" style="color:#00c853">tid=john</div>
+    </div>
+    <div class="tid-result">
+      <div class="tid-result-label">Creator's website link to share</div>
+      <div class="tid-result-value" id="tid-site-link" style="color:#f5c842">yoursite.github.io?creator=john</div>
+    </div>
+  </div>
+
+  <button class="btn btn-blue btn-full" style="margin-top:1rem" onclick="doCopyTid()">📋 Copy Buy Button Link</button>
+</div>
+
+<!-- HOW IT WORKS FLOW -->
+<div class="panel">
+  <div class="panel-title">HOW IT FLOWS</div>
+  <div class="panel-sub">The full tracking chain explained</div>
+  <div class="flow-box">
+    <div class="flow-step"><div class="flow-ico">👤</div><div class="flow-txt">Creator shares <span class="highlight" id="flow-site">yoursite.github.io?creator=john</span></div></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step"><div class="flow-ico">🌐</div><div class="flow-txt">Visitor lands on your website — all Buy buttons automatically get <span class="highlight" id="flow-tid">?tid=john</span> added</div></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step"><div class="flow-ico">🛒</div><div class="flow-txt">Visitor clicks Buy → goes to <span class="highlight" id="flow-full">clickbank.net/?tid=john</span></div></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step"><div class="flow-ico">💰</div><div class="flow-txt">Sale recorded in ClickBank under <strong>tid=john</strong> — you know exactly who made it</div></div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step"><div class="flow-ico">💸</div><div class="flow-txt">Every Friday you check ClickBank → pay John his cut via PayPal</div></div>
+  </div>
+</div>
+</div>
+
+<!-- RIGHT: MOCK BUTTON DEMO -->
+<div>
+<div class="panel">
+  <div class="panel-title">LIVE BUTTON DEMO</div>
+  <div class="panel-sub">This is exactly what your buy button does</div>
+
+  <div class="mock-btn-wrap">
+    <div class="mock-btn-label">Buy button on your website</div>
+    <button class="mock-buy-btn" id="mock-btn" onclick="testBtnClick()">
+      <span class="dot"></span>Get Instant Access
+    </button>
+    <div style="font-size:11px;color:#444;margin-top:1rem">Click it to see where it goes →</div>
+  </div>
+
+  <div id="tid-click-result" style="display:none;background:#050505;border:0.5px solid #00c853;border-radius:10px;padding:1rem;margin-bottom:1rem">
+    <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#00c853;margin-bottom:6px">Button would open this link:</div>
+    <div id="tid-click-url" style="font-family:monospace;font-size:12px;color:#ccc;word-break:break-all;line-height:1.6"></div>
+  </div>
+
+  <div class="panel" style="background:#050505;border-color:#1a1a1a;margin-bottom:0">
+    <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#555;margin-bottom:12px">Quick test — pick a creator:</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px" id="quick-creators"></div>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-title">WHAT CLICKBANK SEES</div>
+  <div class="panel-sub">In your ClickBank reporting dashboard</div>
+  <div style="overflow-x:auto">
+    <table id="cb-table" style="width:100%;border-collapse:collapse;font-size:12px">
+      <thead>
+        <tr style="border-bottom:0.5px solid #222">
+          <th style="padding:8px 10px;text-align:left;color:#555;font-weight:600;letter-spacing:1px;text-transform:uppercase;font-size:10px">Date</th>
+          <th style="padding:8px 10px;text-align:left;color:#555;font-weight:600;letter-spacing:1px;text-transform:uppercase;font-size:10px">TID (Creator)</th>
+          <th style="padding:8px 10px;text-align:left;color:#555;font-weight:600;letter-spacing:1px;text-transform:uppercase;font-size:10px">Commission</th>
+        </tr>
+      </thead>
+      <tbody id="cb-tbody"></tbody>
+    </table>
+  </div>
+  <div style="font-size:11px;color:#444;margin-top:10px">↑ This is what your real ClickBank dashboard shows — each sale with the creator's TID</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="toast" id="toast">Copied!</div>
+
+<script>
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+let pNiche='Anime', hasVid=false, imgData=null, imgType='emoji';
+let savedProds=[], savedCreators=[];
+try{savedProds=JSON.parse(localStorage.getItem('as_prods')||'[]')}catch(e){}
+try{savedCreators=JSON.parse(localStorage.getItem('as_creators')||'[]')}catch(e){}
+
+// ══════════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════════
+function showPage(name,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  el.classList.add('active');
+  if(name==='creators') renderCreators();
+  if(name==='tid') initTid();
+}
+
+// ══════════════════════════════════════════════
+// PAGE 1 — PRODUCTS
+// ══════════════════════════════════════════════
+const EMOJIS=['🎨','🇯🇵','📖','🎮','🏆','🎯','🔥','💊','💪','🥊','🎌','🖌️','✏️','📚','🎵','🎸','📷','🏋️','🧘','⚔️','🌟','💡','🚀','🎭'];
+EMOJIS.forEach(e=>{
+  const b=document.createElement('button');
+  b.className='emo-btn'+(e==='🎨'?' sel':'');
+  b.textContent=e;
+  b.onclick=()=>{
+    document.querySelectorAll('.emo-btn').forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel');
+    document.getElementById('emoji-in').value=e;
+    imgData=null; imgType='emoji';
+    updatePrev();
+  };
+  document.getElementById('emoji-grid').appendChild(b);
+});
+
+function switchImgTab(t,el){
+  document.querySelectorAll('.img-tab').forEach(x=>x.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.img-src').forEach(x=>x.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+}
+
+function onFile(inp){
+  const f=inp.files[0]; if(!f)return;
+  new FileReader().onload=e=>{
+    imgData=e.target.result; imgType='base64';
+    document.getElementById('up-ph').style.display='none';
+    document.getElementById('up-prev').style.display='block';
+    document.getElementById('up-prev-img').src=imgData;
+    updatePrev();
+  }, (r=>{r.readAsDataURL(f);return r})(new FileReader()).onload=e=>{
+    imgData=e.target.result; imgType='base64';
+    document.getElementById('up-ph').style.display='none';
+    document.getElementById('up-prev').style.display='block';
+    document.getElementById('up-prev-img').src=imgData;
+    updatePrev();
+  };
+}
+
+// fix file reader
+document.getElementById('file-in').addEventListener('change',function(){
+  const f=this.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    imgData=e.target.result; imgType='base64';
+    document.getElementById('up-ph').style.display='none';
+    document.getElementById('up-prev').style.display='block';
+    document.getElementById('up-prev-img').src=imgData;
+    updatePrev();
+  };
+  r.readAsDataURL(f);
+});
+
+function clearUpload(e){
+  e.stopPropagation();
+  imgData=null; imgType='emoji';
+  document.getElementById('up-ph').style.display='block';
+  document.getElementById('up-prev').style.display='none';
+  updatePrev();
+}
+
+function loadUrl(){
+  const url=document.getElementById('url-in').value.trim(); if(!url)return;
+  const img=document.getElementById('url-prev-img');
+  img.onload=()=>{imgData=url;imgType='url';document.getElementById('url-prev').style.display='block';updatePrev();};
+  img.onerror=()=>toast('Could not load image');
+  img.src=url;
+}
+
+function clearUrl(e){
+  e.stopPropagation();
+  imgData=null;imgType='emoji';
+  document.getElementById('url-prev').style.display='none';
+  document.getElementById('url-in').value='';
+  updatePrev();
+}
+
+function pickNiche(n,el){
+  pNiche=n;
+  document.querySelectorAll('.niche-btn').forEach(x=>x.classList.remove('sel'));
+  el.classList.add('sel');
+  updatePrev();
+}
+
+function togVid(){
+  hasVid=!hasVid;
+  document.getElementById('tog-track').className='tog-track'+(hasVid?' on':'');
+  document.getElementById('tog-lbl').textContent=hasVid?'Has a video':'No video';
+}
+
+function addFeat(){
+  const r=document.createElement('div');r.className='feat-row';
+  r.innerHTML='<input type="text" placeholder="Add a benefit..."/><button class="feat-del" onclick="delFeat(this)">×</button>';
+  document.getElementById('feat-list').appendChild(r);
+}
+function delFeat(b){if(document.querySelectorAll('.feat-row').length>1)b.parentElement.remove();}
+function cleanId(i){i.value=i.value.replace(/[^a-z0-9_]/gi,'').toLowerCase();}
+
+function updatePrev(){
+  const name=document.getElementById('f-title').value||'Product name here';
+  const price=document.getElementById('f-price').value||'Price · Commission';
+  const emoji=document.getElementById('emoji-in')?.value||'🎨';
+  document.getElementById('prev-name').textContent=name;
+  document.getElementById('prev-price').textContent=price;
+  document.getElementById('prev-niche').textContent=pNiche;
+  const pi=document.getElementById('prev-img');
+  const pe=document.getElementById('prev-emoji');
+  if(imgData){pi.src=imgData;pi.style.display='block';pe.style.display='none';}
+  else{pi.style.display='none';pe.style.display='block';pe.textContent=emoji;}
+}
+
+function generateProduct(){
+  const title=document.getElementById('f-title').value.trim();
+  const price=document.getElementById('f-price').value.trim();
+  const desc=document.getElementById('f-desc').value.trim();
+  const hop=document.getElementById('f-hop').value.trim();
+  const pid=document.getElementById('f-id').value.trim();
+  const emoji=document.getElementById('emoji-in')?.value.trim()||'🎨';
+  const feats=Array.from(document.querySelectorAll('.feat-row input')).map(i=>i.value.trim()).filter(Boolean);
+  if(!title){alert('Enter a product title');return;}
+  if(!pid){alert('Enter a product ID');return;}
+  if(!hop){alert('Enter your ClickBank hoplink');return;}
+  const esc=s=>s.replace(/'/g,"\\'");
+  const featStr=feats.map(f=>`      '${esc(f)}'`).join(',\n');
+  const jsCode=`  ${pid}: {\n    emoji: '${imgData?'':emoji}',\n    image: '${imgData?'[image data]':''}',\n    niche: '${pNiche}',\n    title: '${esc(title)}',\n    desc: '${esc(desc)}',\n    features: [\n${featStr}\n    ],\n    hasVideo: ${hasVid},\n    cbPath: '${hop.replace(/^https?:\/\//,'')}'  \n  },`;
+  const thumbInner=imgData?`<img src="${imgData.substring(0,50)}..." style="width:100%;height:100%;object-fit:cover;position:absolute;inset:0"/>`:emoji;
+  const htmlCode=`<div class="product-card">\n  <div class="product-thumb" style="position:relative">${thumbInner}</div>\n  <div class="product-body">\n    <div class="product-niche">${pNiche}</div>\n    <div class="product-title">${title}</div>\n    <div class="product-commission">${price}</div>\n    <div class="product-btns">\n      <button class="card-btn card-btn-info" onclick="openModal('${pid}')">ℹ Info</button>\n      <button class="card-btn card-btn-buy buy-btn" data-product="${pid}">Buy Now</button>\n    </div>\n  </div>\n</div>`;
+  const jsReal=jsCode.replace('[image data]',imgData||'');
+  document.getElementById('code-js').textContent='// STEP 1 — Paste inside const PRODUCTS = { ... }\n\n'+jsCode;
+  document.getElementById('code-html').textContent='<!-- STEP 2 — Paste inside '+pNiche+' section -->\n\n'+htmlCode;
+  ['code-js','code-html'].forEach(id=>document.getElementById(id).classList.add('on'));
+  document.getElementById('copy-btns').classList.add('on');
+  window._jsCode=jsReal; window._htmlCode=htmlCode;
+  savedProds.push({pid,emoji:imgData?'':emoji,imgThumb:imgData?imgData.substring(0,200):null,title,niche:pNiche});
+  try{localStorage.setItem('as_prods',JSON.stringify(savedProds))}catch(e){}
+  renderSavedProds();
+  toast('Code generated ✅');
+}
+
+function doCopy(type){
+  const txt=type==='js'?window._jsCode:window._htmlCode; if(!txt)return;
+  navigator.clipboard.writeText(txt).then(()=>{
+    const b=document.querySelector('.cp-'+type);
+    const orig=b.textContent; b.textContent='✅ Copied!';
+    setTimeout(()=>b.textContent=orig,2000);
+    toast('Copied!');
+  });
+}
+
+function renderSavedProds(){
+  if(!savedProds.length){document.getElementById('saved-prod-panel').style.display='none';return;}
+  document.getElementById('saved-prod-panel').style.display='block';
+  document.getElementById('saved-prod-items').innerHTML=savedProds.map((p,i)=>`
+    <div class="sli">
+      <div class="sli-thumb">${p.imgThumb?`<img src="${p.imgThumb}"/>`:(p.emoji||'📦')}</div>
+      <div class="sli-info"><div class="sli-name">${p.title}</div><div class="sli-meta">${p.niche} · ${p.pid}</div></div>
+      <button class="sli-del" onclick="delProd(${i})">×</button>
+    </div>`).join('');
+}
+function delProd(i){savedProds.splice(i,1);try{localStorage.setItem('as_prods',JSON.stringify(savedProds))}catch(e){}renderSavedProds();toast('Removed');}
+
+// ══════════════════════════════════════════════
+// PAGE 2 — CREATORS
+// ══════════════════════════════════════════════
+function sanitizeCreator(inp){
+  inp.value=inp.value.replace(/[^a-zA-Z0-9_]/g,'').toLowerCase();
+}
+
+function updateCreatorPreview(){
+  const site=document.getElementById('site-url').value.trim()||'yoursite.github.io';
+  const name=document.getElementById('c-name').value.trim()||'name';
+  const cleanSite=site.replace(/^https?:\/\//,'').replace(/\/$/,'');
+  document.getElementById('c-link-preview').textContent=cleanSite+'?creator='+name;
+  document.getElementById('c-tid-preview').textContent='tid='+name;
+}
+
+function addCreator(){
+  const site=document.getElementById('site-url').value.trim();
+  const name=document.getElementById('c-name').value.trim();
+  const tiktok=document.getElementById('c-tiktok').value.trim();
+  const niche=document.getElementById('c-niche').value;
+  const followers=document.getElementById('c-followers').value.trim();
+  const notes=document.getElementById('c-notes').value.trim();
+  if(!site){alert('Enter your GitHub site URL first');return;}
+  if(!name){alert('Enter the creator name');return;}
+  const cleanSite=site.replace(/^https?:\/\//,'').replace(/\/$/,'');
+  const link='https://'+cleanSite+'?creator='+name;
+  savedCreators.push({name,tiktok,niche,followers,notes,link,tid:'tid='+name,created:new Date().toLocaleDateString()});
+  try{localStorage.setItem('as_creators',JSON.stringify(savedCreators))}catch(e){}
+  // clear form
+  ['c-name','c-tiktok','c-followers','c-notes'].forEach(id=>document.getElementById(id).value='');
+  renderCreators();
+  toast('Creator link generated ✅');
+}
+
+function renderCreators(){
+  const container=document.getElementById('creator-list');
+  const countLbl=document.getElementById('creator-count-label');
+  if(!savedCreators.length){
+    container.innerHTML='<div class="empty-creators"><div class="empty-ico">👥</div><div class="empty-txt">No creators yet<br/>Add your first creator on the left<br/>Each gets a unique tracking link</div></div>';
+    countLbl.textContent='No creators yet';
+    return;
+  }
+  countLbl.textContent=savedCreators.length+' creator'+(savedCreators.length>1?'s':'')+' · Click any link to copy';
+  const nichemoji={Anime:'🎌',Gaming:'🎮',Fitness:'💪',Mixed:'🌟'};
+  container.innerHTML=savedCreators.map((c,i)=>`
+    <div class="creator-card">
+      <div class="creator-top">
+        <div class="creator-avatar">${nichemoji[c.niche]||'👤'}</div>
+        <div class="creator-info">
+          <div class="creator-name">${c.name} <span class="creator-niche-tag">${c.niche}</span></div>
+          <div class="creator-meta">${c.tiktok||'No handle'} · ${c.followers||'?'} followers · Added ${c.created}</div>
+        </div>
+      </div>
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#555;margin-bottom:4px">Their unique link to share:</div>
+      <div class="creator-link-box" onclick="copyCreatorLink('${c.link}',this)">${c.link}<br/><span style="font-size:10px;color:#555;margin-top:2px;display:block">Click to copy</span></div>
+      <div class="creator-tid">${c.tid}</div>
+      ${c.notes?`<div class="creator-note">📝 ${c.notes}</div>`:''}
+      <div class="creator-actions">
+        <button class="ca-btn ca-copy" onclick="copyCreatorLink('${c.link}',this)">📋 Copy Link</button>
+        <button class="ca-btn ca-del" onclick="delCreator(${i})">🗑 Remove</button>
+      </div>
+    </div>`).join('');
+}
+
+function copyCreatorLink(link,el){
+  navigator.clipboard.writeText(link).then(()=>{
+    const orig=el.textContent;
+    if(el.classList.contains('ca-btn')){el.textContent='✅ Copied!';}
+    setTimeout(()=>{if(el.classList.contains('ca-btn'))el.textContent=orig;},2000);
+    toast('Link copied!');
+  });
+}
+
+function delCreator(i){
+  savedCreators.splice(i,1);
+  try{localStorage.setItem('as_creators',JSON.stringify(savedCreators))}catch(e){}
+  renderCreators();
+  toast('Creator removed');
+}
+
+// ══════════════════════════════════════════════
+// PAGE 3 — TID TESTER
+// ══════════════════════════════════════════════
+const DEMO_SALES=[
+  {date:'May 12',tid:'john',amount:'$47.00'},
+  {date:'May 12',tid:'sara',amount:'$47.00'},
+  {date:'May 11',tid:'john',amount:'$47.00'},
+  {date:'May 11',tid:'mike',amount:'$47.00'},
+  {date:'May 10',tid:'sara',amount:'$47.00'},
+];
+
+function initTid(){
+  renderCbTable(DEMO_SALES);
+  renderQuickCreators();
+  updateTid();
+}
+
+function updateTid(){
+  const hop=(document.getElementById('tid-hop').value.trim()||'nick.product.hop.clickbank.net').replace(/^https?:\/\//,'');
+  const creator=document.getElementById('tid-creator').value.trim()||'john';
+  const siteUrl=document.getElementById('site-url')?.value.trim()||'yoursite.github.io';
+  const cleanSite=siteUrl.replace(/^https?:\/\//,'').replace(/\/$/,'');
+  const fullLink='https://'+hop+'/?tid='+creator;
+  const siteLink=cleanSite+'?creator='+creator;
+  document.getElementById('tid-full-link').textContent=fullLink;
+  document.getElementById('tid-value').textContent='tid='+creator;
+  document.getElementById('tid-site-link').textContent=siteLink;
+  document.getElementById('flow-site').textContent=siteLink;
+  document.getElementById('flow-tid').textContent='?tid='+creator;
+  document.getElementById('flow-full').textContent=hop+'/?tid='+creator;
+  window._tidLink=fullLink;
+}
+
+function doCopyTid(){
+  if(!window._tidLink)return;
+  navigator.clipboard.writeText(window._tidLink).then(()=>toast('Link copied!'));
+}
+
+function testBtnClick(){
+  const link=window._tidLink||'https://nick.product.hop.clickbank.net/?tid=john';
+  document.getElementById('tid-click-url').textContent=link;
+  document.getElementById('tid-click-result').style.display='block';
+  toast('In real site this opens ClickBank!');
+}
+
+function renderQuickCreators(){
+  const names=['john','sara','mike','alex','emily'];
+  const container=document.getElementById('quick-creators');
+  container.innerHTML=names.map(n=>`
+    <button onclick="quickTest('${n}')" style="background:#111;border:0.5px solid #222;border-radius:6px;padding:6px 12px;font-size:12px;color:#888;cursor:pointer;transition:all 0.15s" onmouseover="this.style.borderColor='#1a6fff';this.style.color='#1a6fff'" onmouseout="this.style.borderColor='#222';this.style.color='#888'">${n}</button>
+  `).join('');
+}
+
+function quickTest(name){
+  document.getElementById('tid-creator').value=name;
+  updateTid();
+  toast('Testing with creator: '+name);
+}
+
+function renderCbTable(sales){
+  document.getElementById('cb-tbody').innerHTML=sales.map(s=>`
+    <tr style="border-bottom:0.5px solid #111">
+      <td style="padding:8px 10px;color:#666;font-size:12px">${s.date}</td>
+      <td style="padding:8px 10px"><span style="background:rgba(0,200,83,0.1);color:#00c853;border:0.5px solid rgba(0,200,83,0.2);border-radius:4px;padding:2px 8px;font-size:11px;font-family:monospace">tid=${s.tid}</span></td>
+      <td style="padding:8px 10px;color:#ccc;font-size:12px;font-weight:600">${s.amount}</td>
+    </tr>`).join('');
+}
+
+// ══════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('on');
+  setTimeout(()=>t.classList.remove('on'),2200);
+}
+
+// INIT
+updatePrev();
+renderSavedProds();
+renderCreators();
+</script>
+</body>
+</html>
