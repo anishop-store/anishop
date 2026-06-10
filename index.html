@@ -63,7 +63,7 @@ section{padding:5rem 2rem;max-width:1100px;margin:0 auto}
 .product-body{padding:14px}
 .product-niche{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:4px}
 .product-title{font-size:15px;font-weight:600;color:var(--white);margin-bottom:4px}
-.product-earn{font-size:12px;color:var(--green);margin-bottom:14px;font-weight:500}
+.product-earn{font-size:13px;color:var(--muted);margin-bottom:14px;font-weight:500}
 .product-btns{display:flex;gap:8px}
 .card-btn{flex:1;padding:9px 0;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;border:none;letter-spacing:0.3px}
 .card-btn-info{background:rgba(26,111,255,0.12);color:var(--blue);border:1px solid rgba(26,111,255,0.3)}
@@ -103,8 +103,8 @@ section{padding:5rem 2rem;max-width:1100px;margin:0 auto}
 
 footer{border-top:0.5px solid var(--border);padding:2rem;text-align:center;color:var(--muted);font-size:12px;position:relative}
 footer span{color:var(--blue)}
-.admin-gear{position:absolute;bottom:1rem;right:1rem;background:transparent;border:none;color:#1a1a1a;font-size:14px;cursor:pointer;padding:4px;transition:color 0.2s;text-decoration:none}
-.admin-gear:hover{color:#333}
+.admin-gear{position:absolute;bottom:1rem;right:1rem;background:#111;border:0.5px solid #333;color:#555;font-size:13px;cursor:pointer;padding:6px 10px;border-radius:6px;transition:all 0.2s;text-decoration:none;display:inline-block}
+.admin-gear:hover{color:#fff;border-color:#555;background:#1a1a1a}
 
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:200;align-items:center;justify-content:center;padding:1rem}
 .modal-overlay.open{display:flex}
@@ -142,7 +142,6 @@ footer span{color:var(--blue)}
   <div class="nav-links">
     <a href="#products">Products</a>
     <a href="#how">How it works</a>
-    <a href="#reviews">Reviews</a>
   </div>
 </nav>
 
@@ -201,35 +200,14 @@ footer span{color:var(--blue)}
     <div class="section-sub">Three steps to getting the skills and results you want.</div>
     <div class="steps">
       <div class="step"><div class="step-num">01</div><div class="step-icon">🔍</div><div class="step-title">Browse Products</div><div class="step-desc">Find the course or program that matches your passion — anime, gaming, or fitness.</div></div>
-      <div class="step"><div class="step-num">02</div><div class="step-icon">🛒</div><div class="step-title">Secure Checkout</div><div class="step-desc">Buy through ClickBank — the world's most trusted digital marketplace. 100% safe.</div></div>
+      <div class="step"><div class="step-num">02</div><div class="step-icon">🛒</div><div class="step-title">Secure Checkout</div><div class="step-desc">Buy through Digistore24 — a trusted digital marketplace. 100% safe and secure.</div></div>
       <div class="step"><div class="step-num">03</div><div class="step-icon">🚀</div><div class="step-title">Instant Access</div><div class="step-desc">Get immediate access to your purchase. Start learning within minutes of buying.</div></div>
       <div class="step"><div class="step-num">04</div><div class="step-icon">🏅</div><div class="step-title">Level Up</div><div class="step-desc">Follow the program and see real results. Every product comes with a money-back guarantee.</div></div>
     </div>
   </div>
 </section>
 
-<section id="reviews">
-  <div class="section-label">Social Proof</div>
-  <div class="section-title">WHAT PEOPLE SAY</div>
-  <div class="section-sub">Real results from real customers.</div>
-  <div class="testimonial-grid">
-    <div class="testimonial">
-      <div class="testimonial-stars">★★★★★</div>
-      <div class="testimonial-text">"The anime drawing course completely changed how I create art. I went from stick figures to drawing full characters in just 3 weeks. Insane value."</div>
-      <div class="testimonial-author"><div class="avatar">🎨</div><div><div class="author-name">Alex K.</div><div class="author-sub">Anime artist, USA</div></div></div>
-    </div>
-    <div class="testimonial">
-      <div class="testimonial-stars">★★★★★</div>
-      <div class="testimonial-text">"Pro Gamer Blueprint helped me finally hit Diamond rank after being stuck in Gold for two years. The mental game section alone is worth it."</div>
-      <div class="testimonial-author"><div class="avatar">🎮</div><div><div class="author-name">Marcus T.</div><div class="author-sub">Competitive gamer, UK</div></div></div>
-    </div>
-    <div class="testimonial">
-      <div class="testimonial-stars">★★★★★</div>
-      <div class="testimonial-text">"Lost 14 pounds in 6 weeks with the Fat Burn Formula. No gym, just followed the plan. My friends keep asking what I'm doing differently."</div>
-      <div class="testimonial-author"><div class="avatar">💪</div><div><div class="author-name">Sarah M.</div><div class="author-sub">Fitness enthusiast, Canada</div></div></div>
-    </div>
-  </div>
-</section>
+
 
 <div class="cta-section">
   <div class="cta-inner">
@@ -243,7 +221,7 @@ footer span{color:var(--blue)}
 </div>
 
 <footer>
-  <p>© 2025 AniShop · Powered by <span>ClickBank</span> · All purchases are processed securely.</p>
+  <p>© 2025 AniShop · Powered by <span>Digistore24</span> · All purchases are processed securely.</p>
   <p style="margin-top:6px">Affiliate disclosure: This site contains affiliate links. We may earn a commission on purchases.</p>
   <a href="admin-panel.html" class="admin-gear" title="Admin">⚙</a>
 </footer>
@@ -280,7 +258,7 @@ if(params.get('creator')){
 }
 
 function buildLink(cbPath){
-  return 'https://' + cbPath + '/?tid=' + encodeURIComponent(creator);
+  return 'https://' + cbPath + '/?aff_sub=' + encodeURIComponent(creator);
 }
 
 // ── LOAD PRODUCTS FROM LOCALSTORAGE ───────────────────────────
@@ -324,7 +302,7 @@ function loadProducts(){
         : `<span>${p.emoji || '🎨'}</span>`;
 
       const badge = i === 0 ? `<div class="product-badge hot">BEST SELLER</div>` : '';
-      const earnText = p.creatorEarns ? `💰 Creators earn $${p.creatorEarns} per sale` : '';
+      const earnText = p.price ? `$${p.price}` : '';
 
       card.innerHTML = `
         <div class="product-thumb">${thumbContent}${badge}</div>
