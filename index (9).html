@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AniShop — Anime, Gaming & Fitness</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --black:#000;--white:#fff;--blue:#1a6fff;--blue-dark:#1458d6;
+  --gold:#f5c842;--green:#00c853;--green-dark:#009624;
+  --surface:#0a0a0a;--surface2:#111;--surface3:#1a1a1a;
+  --border:#222;--text:#fff;--muted:#888;
+  --font-display:'Bebas Neue',sans-serif;--font-body:'DM Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--black);color:var(--text);font-family:var(--font-body);font-size:15px;line-height:1.6;overflow-x:hidden}
+
+nav{position:sticky;top:0;z-index:50;background:rgba(0,0,0,0.92);backdrop-filter:blur(12px);border-bottom:0.5px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav-logo{font-family:var(--font-display);font-size:24px;letter-spacing:2px;color:var(--blue)}
+.nav-links{display:flex;gap:1.5rem}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:13px;letter-spacing:1px;text-transform:uppercase;transition:color 0.2s}
+.nav-links a:hover{color:var(--white)}
+
+.hero{min-height:88vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4rem 2rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(26,111,255,0.12),transparent 70%);pointer-events:none}
+.hero-tag{display:inline-block;background:rgba(26,111,255,0.15);color:var(--blue);border:0.5px solid rgba(26,111,255,0.3);border-radius:20px;padding:4px 14px;font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-bottom:1.5rem}
+.hero h1{font-family:var(--font-display);font-size:clamp(52px,10vw,110px);line-height:0.95;letter-spacing:2px;margin-bottom:1.5rem}
+.hero h1 span{color:var(--blue)}
+.hero p{font-size:16px;color:var(--muted);max-width:480px;margin:0 auto 2.5rem}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+.btn-buy{display:inline-flex;align-items:center;gap:8px;background:var(--green);color:#000;padding:14px 32px;border-radius:8px;font-size:15px;font-weight:600;text-decoration:none;border:none;cursor:pointer;transition:background 0.2s,transform 0.15s;letter-spacing:0.5px}
+.btn-buy:hover{background:var(--green-dark);transform:translateY(-1px)}
+.btn-buy .pulse{width:8px;height:8px;background:#000;border-radius:50%;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.4)}}
+.btn-info{display:inline-flex;align-items:center;gap:6px;background:transparent;color:var(--blue);padding:14px 28px;border-radius:8px;font-size:15px;font-weight:500;text-decoration:none;border:1px solid var(--blue);cursor:pointer;transition:background 0.2s}
+.btn-info:hover{background:rgba(26,111,255,0.1)}
+
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--muted);font-size:11px;letter-spacing:2px;text-transform:uppercase;animation:float 2s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-6px)}}
+.scroll-arrow{width:20px;height:20px;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);transform:rotate(45deg)}
+
+section{padding:5rem 2rem;max-width:1100px;margin:0 auto}
+.section-label{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--blue);margin-bottom:0.75rem}
+.section-title{font-family:var(--font-display);font-size:clamp(32px,5vw,52px);letter-spacing:1px;margin-bottom:0.5rem}
+.section-sub{color:var(--muted);font-size:14px;margin-bottom:3rem;max-width:500px}
+
+.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px}
+.product-card{background:var(--surface2);border:0.5px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color 0.2s,transform 0.2s}
+.product-card:hover{border-color:#444;transform:translateY(-3px)}
+.product-thumb{height:160px;display:flex;align-items:center;justify-content:center;font-size:56px;background:var(--surface3);position:relative}
+.product-thumb img{width:100%;height:100%;object-fit:cover}
+.product-badge{position:absolute;top:10px;right:10px;background:var(--blue);color:#fff;font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;letter-spacing:0.5px}
+.product-badge.hot{background:var(--gold);color:#000}
+.product-body{padding:14px}
+.product-niche{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:4px}
+.product-title{font-size:15px;font-weight:600;color:var(--white);margin-bottom:14px}
+.product-btns{display:flex;gap:8px}
+.card-btn{flex:1;padding:9px 0;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;border:none;letter-spacing:0.3px}
+.card-btn-info{background:rgba(26,111,255,0.12);color:var(--blue);border:1px solid rgba(26,111,255,0.3)}
+.card-btn-info:hover{background:rgba(26,111,255,0.2)}
+.card-btn-buy{background:var(--green);color:#000}
+.card-btn-buy:hover{background:var(--green-dark)}
+
+.niche-section{margin-bottom:3rem}
+.niche-divider{display:flex;align-items:center;gap:12px;margin-bottom:1.5rem}
+.niche-label-big{font-family:var(--font-display);font-size:28px;letter-spacing:2px}
+.niche-line{flex:1;height:0.5px;background:var(--border)}
+.empty-niche{color:var(--muted);font-size:13px;padding:1rem 0;font-style:italic}
+
+/* Hide entire niche section when empty and set to hidden */
+.niche-section.hidden{display:none}
+
+.tracking-banner{background:rgba(26,111,255,0.08);border:0.5px solid rgba(26,111,255,0.2);border-radius:8px;padding:10px 16px;font-size:12px;color:var(--blue);margin-bottom:2rem;display:none;align-items:center;gap:8px}
+.tracking-banner.show{display:flex}
+
+.steps{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.step{background:var(--surface2);border:0.5px solid var(--border);border-radius:12px;padding:1.5rem;position:relative}
+.step-num{font-family:var(--font-display);font-size:48px;color:var(--border);position:absolute;top:12px;right:16px}
+.step-icon{font-size:28px;margin-bottom:12px}
+.step-title{font-size:14px;font-weight:600;color:var(--white);margin-bottom:6px}
+.step-desc{font-size:13px;color:var(--muted);line-height:1.6}
+
+.cta-section{background:var(--surface2);border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border);padding:5rem 2rem;text-align:center}
+.cta-inner{max-width:600px;margin:0 auto}
+.cta-inner h2{font-family:var(--font-display);font-size:clamp(36px,6vw,64px);margin-bottom:1rem;letter-spacing:1px}
+.cta-inner p{color:var(--muted);margin-bottom:2rem;font-size:15px}
+
+footer{border-top:0.5px solid var(--border);padding:2rem;text-align:center;color:var(--muted);font-size:12px;position:relative}
+.admin-gear{position:absolute;bottom:1rem;right:1rem;background:#111;border:0.5px solid #333;color:#555;font-size:13px;cursor:pointer;padding:6px 10px;border-radius:6px;transition:all 0.2s;text-decoration:none;display:inline-block}
+.admin-gear:hover{color:#fff;border-color:#555;background:#1a1a1a}
+
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:200;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface2);border:0.5px solid #333;border-radius:18px;max-width:460px;width:100%;max-height:90vh;overflow-y:auto;position:relative;animation:modalIn 0.25s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(0.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-close-btn{position:absolute;top:14px;right:16px;background:var(--surface3);border:0.5px solid var(--border);color:var(--muted);width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:color 0.2s;z-index:10}
+.modal-close-btn:hover{color:var(--white)}
+.modal-thumb{height:200px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:72px;border-radius:18px 18px 0 0;overflow:hidden}
+.modal-thumb img{width:100%;height:100%;object-fit:cover}
+.modal-body{padding:1.5rem}
+.modal-niche{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:6px}
+.modal-title{font-family:var(--font-display);font-size:28px;letter-spacing:1px;margin-bottom:8px}
+.modal-desc{font-size:14px;color:#bbb;line-height:1.7;margin-bottom:1.25rem}
+.modal-features{list-style:none;margin-bottom:1.5rem}
+.modal-features li{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#ccc;padding:5px 0;border-bottom:0.5px solid var(--border)}
+.modal-features li:last-child{border-bottom:none}
+.modal-features li::before{content:'✓';color:var(--green);font-weight:700;flex-shrink:0;margin-top:1px}
+.modal-video-box{background:var(--surface3);border:0.5px solid var(--border);border-radius:10px;height:150px;display:none;flex-direction:column;align-items:center;justify-content:center;gap:8px;margin-bottom:1.5rem;color:var(--muted);font-size:13px}
+.modal-video-box .play{font-size:28px;color:var(--blue)}
+.modal-buy-btn{display:block;width:100%;padding:14px;background:var(--green);color:#000;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;transition:background 0.2s;letter-spacing:0.5px;text-align:center;text-decoration:none}
+.modal-buy-btn:hover{background:var(--green-dark)}
+
+@media(max-width:600px){
+  nav{padding:0 1rem}.nav-links{display:none}
+  .hero{min-height:75vh;padding:3rem 1.5rem}
+  section{padding:3rem 1.5rem}
+  .hero-btns{flex-direction:column;align-items:center}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">ANISHOP</div>
+  <div class="nav-links">
+    <a href="#products">Products</a>
+    <a href="#how">How it works</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">✦ Anime · Gaming · Fitness</div>
+  <h1>LEVEL UP<br/><span>YOUR LIFE</span></h1>
+  <p>Premium digital courses and programs handpicked for the most passionate communities online.</p>
+  <div class="hero-btns">
+    <a id="hero-buy" class="btn-buy" href="#products">
+      <span class="pulse"></span>
+      Get Instant Access
+    </a>
+    <a class="btn-info" href="#products">Browse Products</a>
+  </div>
+  <div class="scroll-hint"><div class="scroll-arrow"></div>scroll</div>
+</div>
+
+<section id="products">
+  <div class="section-label">Our Collection</div>
+  <div class="section-title">SHOP BY NICHE</div>
+  <div class="section-sub">Click Info to learn more, or Buy to get instant access through our secure checkout.</div>
+
+  <div id="tracking-banner" class="tracking-banner">
+    <span>🔗</span><span id="tracking-text">Tracking active</span>
+  </div>
+
+  <div class="niche-section" id="section-anime">
+    <div class="niche-divider"><div class="niche-label-big">🎌 Anime</div><div class="niche-line"></div></div>
+    <div class="product-grid" id="grid-anime"></div>
+  </div>
+
+  <div class="niche-section" id="section-gaming">
+    <div class="niche-divider"><div class="niche-label-big">🎮 Gaming</div><div class="niche-line"></div></div>
+    <div class="product-grid" id="grid-gaming"></div>
+  </div>
+
+  <div class="niche-section" id="section-fitness">
+    <div class="niche-divider"><div class="niche-label-big">💪 Fitness</div><div class="niche-line"></div></div>
+    <div class="product-grid" id="grid-fitness"></div>
+  </div>
+</section>
+
+<section id="how" style="background:var(--surface);border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border);max-width:100%;padding:5rem 2rem">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="section-label">Simple Process</div>
+    <div class="section-title">HOW IT WORKS</div>
+    <div class="section-sub">Three steps to getting the skills and results you want.</div>
+    <div class="steps">
+      <div class="step"><div class="step-num">01</div><div class="step-icon">🔍</div><div class="step-title">Browse Products</div><div class="step-desc">Find the course or program that matches your passion — anime, gaming, or fitness.</div></div>
+      <div class="step"><div class="step-num">02</div><div class="step-icon">🛒</div><div class="step-title">Secure Checkout</div><div class="step-desc">Buy through our trusted checkout. 100% safe and secure.</div></div>
+      <div class="step"><div class="step-num">03</div><div class="step-icon">🚀</div><div class="step-title">Instant Access</div><div class="step-desc">Get immediate access to your purchase. Start learning within minutes of buying.</div></div>
+      <div class="step"><div class="step-num">04</div><div class="step-icon">🏅</div><div class="step-title">Level Up</div><div class="step-desc">Follow the program and see real results. Every product comes with a money-back guarantee.</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="cta-section">
+  <div class="cta-inner">
+    <div class="section-label" style="text-align:center">Ready?</div>
+    <h2>START YOUR<br/><span style="color:var(--blue)">JOURNEY</span></h2>
+    <p>Join thousands of people who already levelled up with our products. Instant access, money-back guarantee.</p>
+    <a id="cta-buy" class="btn-buy" href="#products" style="font-size:16px;padding:16px 40px">
+      <span class="pulse"></span>Get Instant Access
+    </a>
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 AniShop · All purchases are processed securely.</p>
+  <p style="margin-top:6px">Affiliate disclosure: This site contains affiliate links. We may earn a commission on purchases.</p>
+  <a href="admin-panel.html" class="admin-gear" title="Admin">⚙</a>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <button class="modal-close-btn" onclick="closeModal()">✕</button>
+    <div class="modal-thumb" id="modal-thumb"><span id="modal-thumb-emoji">🎨</span></div>
+    <div class="modal-body">
+      <div class="modal-niche" id="modal-niche">Anime</div>
+      <div class="modal-title" id="modal-title">Product Title</div>
+      <div class="modal-desc" id="modal-desc">Description</div>
+      <ul class="modal-features" id="modal-features"></ul>
+      <div class="modal-video-box" id="modal-video">
+        <div class="play">▶</div>
+        <div>Product video preview</div>
+      </div>
+      <a id="modal-buy" class="modal-buy-btn" href="#" target="_blank">Get Instant Access →</a>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── TRACKING ──────────────────────────────────────────────────
+const params = new URLSearchParams(window.location.search);
+const creator = params.get('creator') || 'direct';
+
+if(params.get('creator')){
+  const banner = document.getElementById('tracking-banner');
+  banner.classList.add('show');
+  document.getElementById('tracking-text').textContent = 'Creator link active: ' + creator;
+}
+
+function buildLink(affLink){
+  if(!affLink) return '#';
+  // NutriProfits uses &sub1= for tracking
+  const sep = affLink.includes('?') ? '&' : '?';
+  return affLink + sep + 'sub1=' + encodeURIComponent(creator);
+}
+
+// ── LOAD PRODUCTS FROM LOCALSTORAGE ───────────────────────────
+let allProducts = [];
+
+function loadProducts(){
+  const stored = localStorage.getItem('as_store_products');
+  allProducts = stored ? JSON.parse(stored) : [];
+
+  const grids = {
+    'Anime':   document.getElementById('grid-anime'),
+    'Gaming':  document.getElementById('grid-gaming'),
+    'Fitness': document.getElementById('grid-fitness')
+  };
+
+  const sections = {
+    'Anime':   document.getElementById('section-anime'),
+    'Gaming':  document.getElementById('section-gaming'),
+    'Fitness': document.getElementById('section-fitness')
+  };
+
+  Object.values(grids).forEach(g => g.innerHTML = '');
+
+  const byNiche = {'Anime':[],'Gaming':[],'Fitness':[]};
+  allProducts.forEach(p => {
+    const niche = p.niche || 'Anime';
+    if(byNiche[niche]) byNiche[niche].push(p);
+  });
+
+  Object.entries(byNiche).forEach(([niche, products]) => {
+    const grid = grids[niche];
+    const section = sections[niche];
+
+    if(products.length === 0){
+      // Hide the entire section if no products
+      section.classList.add('hidden');
+      return;
+    }
+
+    section.classList.remove('hidden');
+    products.forEach((p, i) => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+
+      const thumbContent = p.image
+        ? `<img src="${p.image}" alt="${p.title}" onerror="this.parentElement.innerHTML='<span>${p.emoji||'🎨'}</span>'">`
+        : `<span>${p.emoji || '🎨'}</span>`;
+
+      const badge = i === 0 ? `<div class="product-badge hot">BEST SELLER</div>` : '';
+
+      card.innerHTML = `
+        <div class="product-thumb">${thumbContent}${badge}</div>
+        <div class="product-body">
+          <div class="product-niche">${niche}</div>
+          <div class="product-title">${p.title}</div>
+          <div class="product-btns">
+            <button class="card-btn card-btn-info" onclick="openModal('${p.id}')">ℹ Info</button>
+            <button class="card-btn card-btn-buy" onclick="window.open('${buildLink(p.hoplink||'')}','_blank')">Buy Now</button>
+          </div>
+        </div>`;
+      grid.appendChild(card);
+    });
+  });
+
+  // Set hero/cta buy to first product
+  if(allProducts.length > 0){
+    const first = allProducts[0];
+    document.getElementById('hero-buy').href = buildLink(first.hoplink||'#');
+    document.getElementById('cta-buy').href = buildLink(first.hoplink||'#');
+  }
+}
+
+// ── MODAL ─────────────────────────────────────────────────────
+function openModal(pid){
+  const p = allProducts.find(x => x.id === pid);
+  if(!p) return;
+
+  const thumbEl = document.getElementById('modal-thumb');
+  if(p.image){
+    thumbEl.innerHTML = `<img src="${p.image}" alt="${p.title}" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.innerHTML='<span style=font-size:72px>${p.emoji||'🎨'}</span>'">`;
+  } else {
+    thumbEl.innerHTML = `<span style="font-size:72px">${p.emoji||'🎨'}</span>`;
+  }
+
+  document.getElementById('modal-niche').textContent = p.niche || 'Anime';
+  document.getElementById('modal-title').textContent = p.title;
+  document.getElementById('modal-desc').textContent = p.desc || '';
+  const ul = document.getElementById('modal-features');
+  ul.innerHTML = (p.features || []).map(f => `<li>${f}</li>`).join('');
+  const vid = document.getElementById('modal-video');
+  vid.style.display = p.hasVideo ? 'flex' : 'none';
+  document.getElementById('modal-buy').href = buildLink(p.hoplink||'#');
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(){
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modal-overlay').addEventListener('click', function(e){
+  if(e.target === this) closeModal();
+});
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeModal(); });
+
+// ── INIT ──────────────────────────────────────────────────────
+loadProducts();
+
+window.addEventListener('storage', e => {
+  if(e.key === 'as_store_products') loadProducts();
+});
+</script>
+</body>
+</html>
