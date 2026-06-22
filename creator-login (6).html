@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>KLOVA — Creator Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#000;color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.6;min-height:100vh}
+
+/* LOGIN */
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(26,111,255,0.08),transparent 70%)}
+.login-box{background:#0a0a0a;border:0.5px solid #222;border-radius:20px;padding:2.5rem;width:100%;max-width:380px;text-align:center}
+.login-logo{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:3px;color:#1a6fff;margin-bottom:4px}
+.login-sub{font-size:11px;color:#555;letter-spacing:2px;text-transform:uppercase;margin-bottom:2.5rem}
+.field{margin-bottom:1rem;text-align:left}
+label{display:block;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#666;margin-bottom:6px}
+input{width:100%;background:#111;border:0.5px solid #2a2a2a;border-radius:8px;color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;padding:12px 14px;outline:none;transition:border-color 0.2s}
+input:focus{border-color:#1a6fff}
+input::placeholder{color:#444}
+.pin-input{text-align:center;letter-spacing:8px;font-size:20px}
+.login-btn{width:100%;padding:14px;background:#1a6fff;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-top:0.5rem;transition:all 0.2s}
+.login-btn:hover{background:#1458d6}
+.login-error{color:#ff4444;font-size:13px;margin-top:12px;display:none}
+
+/* DASHBOARD */
+#dashboard{display:none;min-height:100vh}
+nav{background:#0a0a0a;border-bottom:0.5px solid #222;padding:0 2rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:#1a6fff}
+.nav-right{display:flex;align-items:center;gap:1rem}
+.creator-badge{background:rgba(26,111,255,0.12);border:0.5px solid rgba(26,111,255,0.3);color:#1a6fff;padding:5px 12px;border-radius:6px;font-size:12px;font-weight:600}
+.logout-btn{background:transparent;border:0.5px solid #222;color:#555;padding:5px 12px;border-radius:6px;font-size:12px;cursor:pointer;transition:all 0.2s}
+.logout-btn:hover{border-color:#444;color:#fff}
+
+.main{max-width:900px;margin:0 auto;padding:2rem}
+
+/* HERO */
+.creator-hero{background:#0a0a0a;border:0.5px solid #222;border-radius:16px;padding:2rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:1.5rem}
+.creator-avatar{width:64px;height:64px;background:#111;border:0.5px solid #333;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.creator-name-big{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;color:#fff}
+.creator-meta{font-size:12px;color:#555;letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+.creator-link-box{margin-top:10px;background:#111;border:0.5px solid #1a6fff;border-radius:8px;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.creator-link-text{font-size:11px;color:#1a6fff;word-break:break-all;font-family:monospace}
+.copy-link-btn{background:rgba(26,111,255,0.12);border:0.5px solid rgba(26,111,255,0.3);color:#1a6fff;padding:4px 10px;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;flex-shrink:0}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:1.5rem}
+.stat-box{background:#0a0a0a;border:0.5px solid #222;border-radius:12px;padding:1.25rem;text-align:center}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:1px;margin-bottom:4px}
+.stat-label{font-size:11px;color:#555;letter-spacing:1px;text-transform:uppercase}
+.blue{color:#1a6fff}.green{color:#00c853}.gold{color:#f5c842}.red{color:#ff4444}
+
+/* TABLE */
+.panel{background:#0a0a0a;border:0.5px solid #222;border-radius:16px;padding:1.75rem}
+.panel-title{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:0.5px solid #1a1a1a}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#0d0d0d;color:#555;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:10px 12px;text-align:left;border-bottom:0.5px solid #1a1a1a}
+td{padding:10px 12px;border-bottom:0.5px solid #111;color:#ccc;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+.paid-badge{padding:3px 8px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:0.5px}
+.paid-badge.yes{background:rgba(0,200,83,0.15);color:#00c853}
+.paid-badge.no{background:rgba(255,68,68,0.1);color:#ff4444}
+.empty-msg{color:#333;font-size:13px;padding:1.5rem 0;text-align:center}
+
+.toast{position:fixed;bottom:2rem;right:2rem;background:#00c853;color:#000;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:999}
+.toast.show{opacity:1}
+
+@media(max-width:600px){
+  .creator-hero{flex-direction:column;text-align:center}
+  nav{padding:0 1rem}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">KLOVA</div>
+    <div class="login-sub">Creator Portal</div>
+    <div class="field">
+      <label>Your Creator Name</label>
+      <input type="text" id="login-name" placeholder="e.g. john" onkeydown="if(event.key==='Enter')document.getElementById('login-pin').focus()"/>
+    </div>
+    <div class="field">
+      <label>Your 4-Digit PIN</label>
+      <input type="password" class="pin-input" id="login-pin" placeholder="••••" maxlength="4" onkeydown="if(event.key==='Enter')doLogin()"/>
+    </div>
+    <button class="login-btn" onclick="doLogin()">View My Dashboard</button>
+    <div class="login-error" id="login-error">Name or PIN not found — contact your admin</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <nav>
+    <div class="nav-logo">KLOVA</div>
+    <div class="nav-right">
+      <span class="creator-badge" id="nav-creator-name">Creator</span>
+      <button class="logout-btn" onclick="logout()">Log Out</button>
+    </div>
+  </nav>
+
+  <div class="main">
+    <!-- CREATOR INFO -->
+    <div class="creator-hero">
+      <div class="creator-avatar">👤</div>
+      <div style="flex:1">
+        <div class="creator-name-big" id="dash-name">Creator</div>
+        <div class="creator-meta" id="dash-meta">Loading...</div>
+        <div class="creator-link-box">
+          <div class="creator-link-text" id="dash-link">—</div>
+          <button class="copy-link-btn" onclick="copyMyLink()">Copy Link</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-box"><div class="stat-num blue" id="ds-total">$0</div><div class="stat-label">Total Sales</div></div>
+      <div class="stat-box"><div class="stat-num red" id="ds-refunds">$0</div><div class="stat-label">Refunds</div></div>
+      <div class="stat-box"><div class="stat-num" id="ds-net">$0</div><div class="stat-label">Net Sales</div></div>
+      <div class="stat-box"><div class="stat-num gold" id="ds-earned">$0</div><div class="stat-label">You Earned (80%)</div></div>
+      <div class="stat-box"><div class="stat-num green" id="ds-paid">$0</div><div class="stat-label">Paid Out</div></div>
+      <div class="stat-box"><div class="stat-num red" id="ds-unpaid">$0</div><div class="stat-label">Unpaid</div></div>
+    </div>
+
+    <!-- SALES TABLE -->
+    <div class="panel">
+      <div class="panel-title">My Sales History</div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th><th>Sales</th><th>Refunds</th><th>Net</th><th>I Earned (80%)</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="my-sales-body"></tbody>
+        </table>
+      </div>
+      <div id="sales-empty" class="empty-msg">No sales recorded yet. Share your link and start promoting! 🚀</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORE_URL = 'anishop-store.github.io/KLOVA/';
+let currentCreator = null;
+let mySales = [];
+
+function doLogin(){
+  const name = document.getElementById('login-name').value.trim().toLowerCase();
+  const pin = document.getElementById('login-pin').value.trim();
+  if(!name||!pin){alert('Enter your name and PIN');return}
+
+  const creators = JSON.parse(localStorage.getItem('as_creators')||'[]');
+  const found = creators.find(c => c.name.toLowerCase()===name && c.pin===pin);
+
+  if(!found){
+    document.getElementById('login-error').style.display='block';
+    document.getElementById('login-pin').value='';
+    return;
+  }
+
+  currentCreator = found;
+  loadDashboard();
+}
+
+function loadDashboard(){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('dashboard').style.display='block';
+
+  const c = currentCreator;
+  document.getElementById('nav-creator-name').textContent = c.name;
+  document.getElementById('dash-name').textContent = c.name.toUpperCase();
+  document.getElementById('dash-meta').textContent = (c.niche||'All') + (c.tiktok?' · '+c.tiktok:'') + (c.followers?' · '+c.followers+' followers':'');
+
+  const link = 'https://'+STORE_URL+'?creator='+encodeURIComponent(c.name);
+  document.getElementById('dash-link').textContent = link;
+
+  // Load only MY sales
+  const allSales = JSON.parse(localStorage.getItem('as_sales')||'[]');
+  mySales = allSales.filter(s => s.creator.toLowerCase() === c.name.toLowerCase());
+
+  renderMySales();
+}
+
+function renderMySales(){
+  const totalSales = mySales.reduce((a,s)=>a+s.amount,0);
+  const totalRefunds = mySales.reduce((a,s)=>a+s.refunds,0);
+  const totalNet = mySales.reduce((a,s)=>a+s.net,0);
+  const totalEarned = mySales.reduce((a,s)=>a+s.creatorEarns,0);
+  const totalPaid = mySales.filter(s=>s.paid).reduce((a,s)=>a+s.creatorEarns,0);
+  const totalUnpaid = mySales.filter(s=>!s.paid).reduce((a,s)=>a+s.creatorEarns,0);
+
+  document.getElementById('ds-total').textContent='$'+totalSales.toFixed(2);
+  document.getElementById('ds-refunds').textContent='$'+totalRefunds.toFixed(2);
+  document.getElementById('ds-net').textContent='$'+totalNet.toFixed(2);
+  document.getElementById('ds-earned').textContent='$'+totalEarned.toFixed(2);
+  document.getElementById('ds-paid').textContent='$'+totalPaid.toFixed(2);
+  document.getElementById('ds-unpaid').textContent='$'+totalUnpaid.toFixed(2);
+
+  const tbody = document.getElementById('my-sales-body');
+  const empty = document.getElementById('sales-empty');
+
+  if(mySales.length===0){tbody.innerHTML='';empty.style.display='block';return}
+  empty.style.display='none';
+
+  tbody.innerHTML = [...mySales].reverse().map(s=>`
+    <tr>
+      <td>${s.date}</td>
+      <td>$${s.amount.toFixed(2)}</td>
+      <td style="color:#ff4444">-$${s.refunds.toFixed(2)}</td>
+      <td>$${s.net.toFixed(2)}</td>
+      <td style="color:#f5c842;font-weight:600">$${s.creatorEarns.toFixed(2)}</td>
+      <td><span class="paid-badge ${s.paid?'yes':'no'}">${s.paid?'✓ PAID':'PENDING'}</span></td>
+    </tr>`).join('');
+}
+
+function copyMyLink(){
+  const link = document.getElementById('dash-link').textContent;
+  navigator.clipboard.writeText(link).then(()=>showToast('✅ Link copied!')).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=link;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();showToast('✅ Link copied!');
+  });
+}
+
+function logout(){
+  currentCreator=null;
+  mySales=[];
+  document.getElementById('dashboard').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('login-name').value='';
+  document.getElementById('login-pin').value='';
+  document.getElementById('login-error').style.display='none';
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+</script>
+</body>
+</html>
